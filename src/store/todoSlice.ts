@@ -17,10 +17,13 @@ const todosSlice = createSlice({
         completed: false,
       });
     },
+    todoRemoved(state: TodoState, action: PayloadAction<Todo["id"]>) {
+      return state.filter((e) => e.id !== action.payload);
+    },
   },
 });
 
-export const { todoAdded } = todosSlice.actions;
+export const { todoAdded, todoRemoved } = todosSlice.actions;
 
 export const todoSelector = (rootState: RootState) => rootState.todo || [];
 

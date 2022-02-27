@@ -1,6 +1,6 @@
 import { Todo } from "../../../types/todo";
 import { Box, Text } from "@chakra-ui/react";
-import TodoItem from "../TodoItem/TodoItem";
+import TodoItemStore from "../TodoItem/TodoItemStore";
 
 export interface TodoListProps {
   todos: Todo[];
@@ -11,7 +11,7 @@ function TodoList({ todos }: TodoListProps) {
     <Box marginTop={4}>
       {todos.length === 0 && <Text>There is no todos, please add one.</Text>}
       {todos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} />
+        <TodoItemStore key={todo.id} todo={todo} />
       ))}
     </Box>
   );

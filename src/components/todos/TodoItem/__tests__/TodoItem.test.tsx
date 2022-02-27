@@ -16,7 +16,19 @@ describe("TODO Item", () => {
       text: "test todo",
       completed: false,
     };
-    render(<TodoItem todo={todo} />);
+    render(<TodoItem todo={todo} onDelete={() => {}} />);
     expect(screen.getByText("test todo")).toBeInTheDocument();
+  });
+  it("should tigger the on remove callback by clicking on the close icon", () => {
+    const callback = jest.fn((todo: Todo) => {});
+    const todo: Todo = {
+      id: 0,
+      text: "test todo",
+      completed: false,
+    };
+    render(<TodoItem todo={todo} onDelete={callback} />);
+    const button = screen.getByTestId("delete-item");
+    fireEvent.click(button);
+    expect(callback).toHaveBeenCalled();
   });
 });
