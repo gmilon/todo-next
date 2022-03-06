@@ -7,6 +7,20 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
+  tests:
+    name: Running Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+      - name: run Tests
+        run: yarn coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
   build:
     name: Build Docker Image
     runs-on: ubuntu-latest
