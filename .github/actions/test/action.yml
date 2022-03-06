@@ -1,5 +1,10 @@
 name: Unit Tests (Jest)
 description: run all the tests using Jest
+inputs:
+  token:
+    description: 'Codecov token'
+    required: true
+
 runs:
   using: composite
   steps:
@@ -12,4 +17,4 @@ runs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        token: ${{ inputs.token }}
