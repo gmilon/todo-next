@@ -1,8 +1,8 @@
 import React from "react";
 import { cleanup, render } from "@testing-library/react";
-import Home from "../index";
+import Home from "../pages";
 import { Provider } from "react-redux";
-import { store } from "../../src/store/store";
+import { store } from "../src/store/store";
 
 describe("Home Page", () => {
   afterEach(cleanup);

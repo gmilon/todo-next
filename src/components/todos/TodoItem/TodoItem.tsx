@@ -10,7 +10,7 @@ export type TodoItemProps = {
 function TodoItem({ todo, onDelete }: TodoItemProps) {
   const handleDelete = useCallback(() => {
     onDelete(todo);
-  }, []);
+  }, [todo, onDelete]);
   return (
     <Box borderWidth="1px" marginTop={4} borderRadius={"4px"}>
       <Flex p={4} align={"center"}>
