@@ -1,0 +1,15 @@
+name: Unit Tests (Jest)
+description: run all the tests using Jest
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: yarn
+    - name: run Tests
+      shell: bash
+      run: yarn coverage
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}

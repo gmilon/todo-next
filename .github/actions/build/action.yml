@@ -1,0 +1,48 @@
+name: Docker Build
+description: Build docker image for Next.js
+runs:
+  using: composite
+  steps:
+    - name: Log in to docker hub
+      shell: bash
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+    - name: Build dependencies from dockerfile
+      shell: bash
+      run: |
+        docker build \
+        --target dependencies \
+        --cache-from $CACHE_IMAGE:dependencies \
+        --tag $CACHE_IMAGE:dependencies \
+        --file ./Dockerfile \
+        --build-arg BUILDKIT_INLINE_CACHE=1 \
+        "."
+    - name: Build builder from dockerfile
+      shell: bash
+      run: |
+        docker build \
+          --target builder \
+          --cache-from $CACHE_IMAGE:builder \
+          --tag $CACHE_IMAGE:builder \
+          --file ./Dockerfile \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
+          "."
+    - name: Build runner from dockerfile
+      shell: bash
+      run: |
+        docker build \
+          --cache-from $CACHE_IMAGE:dependencies \
+          --cache-from $CACHE_IMAGE:builder \
+          --cache-from $CACHE_IMAGE:runner \
+          --tag $CACHE_IMAGE:runner \
+          --file ./Dockerfile \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
+          "."
+    - name: Push dependencies image to docker hub
+      shell: bash
+      run: docker push $CACHE_IMAGE:dependencies
+    - name: Push builder image to docker hub
+      shell: bash
+      run: docker push $CACHE_IMAGE:builder
+    - name: Push runner image to docker hub
+      shell: bash
+      run: docker push $CACHE_IMAGE:runner

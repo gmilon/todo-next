@@ -7,59 +7,19 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
-  tests:
-    name: Running Unit tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install dependencies
-        run: yarn
-      - name: run Tests
-        run: yarn coverage
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
   build:
-    name: Build Docker Image
+    name: Docker Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-      - name: Log in to docker hub
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - name: Build dependencies from dockerfile
-        run: |
-          docker build \
-          --target dependencies \
-          --cache-from $CACHE_IMAGE:dependencies \
-          --tag $CACHE_IMAGE:dependencies \
-          --file ./Dockerfile \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
-          "."
-      - name: Build builder from dockerfile
-        run: |
-          docker build \
-            --target builder \
-            --cache-from $CACHE_IMAGE:builder \
-            --tag $CACHE_IMAGE:builder \
-            --file ./Dockerfile \
-            --build-arg BUILDKIT_INLINE_CACHE=1 \
-            "."
-      - name: Build runner from dockerfile
-        run: |
-          docker build \
-            --cache-from $CACHE_IMAGE:dependencies \
-            --cache-from $CACHE_IMAGE:builder \
-            --cache-from $CACHE_IMAGE:runner \
-            --tag $CACHE_IMAGE:runner \
-            --file ./Dockerfile \
-            --build-arg BUILDKIT_INLINE_CACHE=1 \
-            "."
-      - name: Push dependencies image to docker hub
-        run: docker push $CACHE_IMAGE:dependencies
-      - name: Push builder image to docker hub
-        run: docker push $CACHE_IMAGE:builder
-      - name: Push runner image to docker hub
-        run: docker push $CACHE_IMAGE:runner
+        uses: actions/checkout@v2
+      - name: Build Docker
+        uses: ./.github/actions/test
+  test:
+    name: Run Jest Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run Tests
+        uses: ./.github/actions/test
