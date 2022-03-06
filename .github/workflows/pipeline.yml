@@ -18,31 +18,34 @@ jobs:
       - name: Build dependencies from dockerfile
         run: |
           docker build \
-          --target base \
-          --cache-from $CACHE_IMAGE:base \
-          --tag $CACHE_IMAGE:base \
+          --target dependencies \
+          --cache-from $CACHE_IMAGE:dependencies \
+          --tag $CACHE_IMAGE:dependencies \
           --file ./Dockerfile \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           "."
       - name: Build builder from dockerfile
         run: |
           docker build \
-            --target base \
-            --cache-from $CACHE_IMAGE:base \
-            --tag $CACHE_IMAGE:base \
+            --target builder \
+            --cache-from $CACHE_IMAGE:builder \
+            --tag $CACHE_IMAGE:builder \
             --file ./Dockerfile \
             --build-arg BUILDKIT_INLINE_CACHE=1 \
             "."
       - name: Build runner from dockerfile
         run: |
           docker build \
-            --cache-from $CACHE_IMAGE:base \
-            --cache-from $CACHE_IMAGE:stage \
-            --tag $CACHE_IMAGE:stage \
+            --cache-from $CACHE_IMAGE:dependencies \
+            --cache-from $CACHE_IMAGE:builder \
+            --cache-from $CACHE_IMAGE:runner \
+            --tag $CACHE_IMAGE:runner \
             --file ./Dockerfile \
             --build-arg BUILDKIT_INLINE_CACHE=1 \
             "."
-      - name: Push base image to docker hub
-        run: docker push $CACHE_IMAGE:base
-      - name: Push stage image to docker hub
-        run: docker push $CACHE_IMAGE:stage
+      - name: Push dependencies image to docker hub
+        run: docker push $CACHE_IMAGE:dependencies
+      - name: Push builder image to docker hub
+        run: docker push $CACHE_IMAGE:builder
+      - name: Push runner image to docker hub
+        run: docker push $CACHE_IMAGE:runner
