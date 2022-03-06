@@ -1,0 +1,16 @@
+name: Unit Tests (Jest)
+description: run all the tests using Jest
+inputs:
+  token:
+    description: 'Codecov token'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: yarn
+    - name: run Tests
+      shell: bash
+      run: yarn lint
