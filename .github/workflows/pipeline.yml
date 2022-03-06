@@ -3,7 +3,7 @@ name: Docker Build
 on: [push]
 
 env:
-  CACHE_IMAGE: gmilon/todo-next
+  CACHE_IMAGE: ghcr.io/gmilon/todo-next
   DOCKER_BUILDKIT: 1
 
 jobs:
