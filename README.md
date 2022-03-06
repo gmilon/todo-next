@@ -1,4 +1,5 @@
 [![codecov](https://codecov.io/gh/gmilon/todo-next/branch/main/graph/badge.svg?token=O92EQNTU9B)](https://codecov.io/gh/gmilon/todo-next)
+![workflow](https://github.com/gmilon/todo-next/actions/workflows/pipeline.yml/badge.svg)
 
 This is a TODO list project that will be used for multiple workshops
 
