@@ -11,9 +11,9 @@ runs:
     - name: Install dependencies
       shell: bash
       run: yarn
-    - name: run Tests
-      shell: bash
-      run: yarn coverage
+    - uses: ArtiomTr/jest-coverage-report-action@v2
+      with:
+        package-manager: yarn
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
